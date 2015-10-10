@@ -12,7 +12,6 @@ var HttpError = require('error').HttpError;
 var app = express();
 app.engine('ejs', require('ejs-locals'));
 app.set('port', config.get('port'));
-debugger;
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
@@ -26,6 +25,10 @@ if (app.get('env') == 'development') {
 
 app.use(express.bodyParser());
 app.use(express.cookieParser());
+
+app.use(express.session({
+
+}));
 
 app.use(require('middleware/sendHttpError'));
 

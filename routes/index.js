@@ -19,15 +19,15 @@ module.exports = function (app) {
         try{
             var id = new ObjectId(req.params.id);
         } catch(e){
-            next(404);
-            return;
+            return next(new HttpError(404, "User not found"));
+
         }
 
         User.findById(req.params.id, function (err, user) {
             if (err) return next(err);
-            debugger;
             if (!user) {
-                next(new HttpError(404, "User not found"));
+                return next(new HttpError(404, "User not found"));
+
             }
             res.json(user);
         });
