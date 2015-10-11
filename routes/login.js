@@ -4,6 +4,7 @@ var AuthError = require('models/user').AuthError;
 //var async = require('async');
 
 exports.get = function (req, res) {
+
     res.render('login');
 };
 exports.post = function (req, res, next) {

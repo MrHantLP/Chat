@@ -1,7 +1,6 @@
 /**
  * Module dependencies.
  */
-
 var express = require('express');
 var http = require('http');
 var path = require('path');
@@ -11,6 +10,8 @@ var mongoose = require(('libs/mongoose'));
 var HttpError = require('error').HttpError;
 
 var app = express();
+
+
 app.engine('ejs', require('ejs-locals'));
 app.set('port', config.get('port'));
 app.set('views', path.join(__dirname, 'views'));
@@ -37,12 +38,14 @@ app.use(express.session({
 
 }));
 
+
 /*app.use(function (req, res, next) {
     req.session.numberOfVisits=req.session.numberOfVisits+1 || 1;
     res.send("Visits: " + req.session.numberOfVisits);
 });*/
 
 app.use(require('middleware/sendHttpError'));
+app.use(require('middleware/loadUser'));
 
 app.use(app.router);
 
@@ -74,54 +77,9 @@ app.use(function (err, req, res, next) {
 
 });
 
-/*
-
-
- //Middleware
-
- app.use(function (req, res, next) {
- if (req.url == '/') {
- res.end("Hello");
- } else {
- next();
- }
- });
-
- app.use(function (req, res, next) {
- if (req.url == '/forbidden') {
- next(new Error("wops, denied"));
- } else {
- next();
- }
- });
-
- app.use(function (req, res) {
- res.send(404, "Page not found");
- });
-
-
- });*/
-
-
-
-/*
-
- var routes = require('./routes');
- var user = require('./routes/user');
-
- // all environments
-
-
- // development only
- if ('development' == app.get('env')) {
- app.use(express.errorHandler());
- }
-
- app.get('/', routes.index);
- app.get('/users', user.list);
-
- */
-
-http.createServer(app).listen(config.get('port'), function () {
+var server = http.createServer(app);
+server.listen(config.get('port'), function () {
     log.info('Express server listening on port ' + config.get('port'));
 });
+
+require('./socket')(server);

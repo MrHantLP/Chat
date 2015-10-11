@@ -12,7 +12,7 @@ async.series([
     open,
     dropDatabase,
     requireModels,
-    createUsers
+    //createUsers
 ], function (err, result) {
     //console.log(arguments);
     mongoose.disconnect();

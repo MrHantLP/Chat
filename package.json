@@ -6,6 +6,9 @@
     "start": "node app.js"
   },
   "dependencies": {
+    "body-parser": "^1.14.1",
+    "cookie-parser": "^1.4.0",
+    "cookie-session": "^1.2.0",
     "ejs": "*",
     "express": "3.21.2"
   }

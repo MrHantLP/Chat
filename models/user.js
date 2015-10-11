@@ -57,31 +57,30 @@ schema.statics.authorize = function (username, password, callback) {
                 if (user.checkPassword(password)) {
                     callback(null, user);
                 } else {
-                    next(new AuthError("Пароль неверен"));
+                    callback(new AuthError("Пароль неверен"));
                 }
             } else {
                 var user = new User({username: username, password: password});
                 user.save(function (err) {
-                    if (err) return next(err);
+                    if (err) return callback(err);
                     callback(null, user);
                 });
             }
-
         }
     ], callback);
 };
 
 exports.User = mongoose.model('User', schema);
-var HttpError = require('error').HttpError;
+
 //Выдаём ошибку поситителю
-function AuthError(status, message) {
+function AuthError(message) {
     Error.apply(this, arguments);
     Error.captureStackTrace(this, AuthError);
-    this.message = message || http.STATUS_CODES[status] || "Error";
+    this.message = message;
 }
 
 util.inherits(AuthError, Error);
 
-HttpError.prototype.name = 'AuthError';
+AuthError.prototype.name = 'AuthError';
 
-exports.HttpError = AuthError;
+exports.AuthError = AuthError;
