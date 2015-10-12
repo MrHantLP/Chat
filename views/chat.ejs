@@ -24,8 +24,14 @@
     });
 
     socket
-            .on('message', function (message) {
-                printMessage(message);
+            .on('message', function (username, message) {
+                printMessage(username + ">" + message);
+            })
+            .on('leave', function (username) {
+                printStatus(username + " вышел из чата");
+            })
+            .on('join', function(username) {
+                printStatus(username + " вошёл в чат");
             })
             .on('connect', function () {
                 printStatus("соединение есть");
@@ -38,13 +44,16 @@
                 input.prop('disabled', true);
                 //setTimeout(reconnect, 500);
             })
+            .on('logout', function () {
+                location.href = "/";
+            })
             .on('reconnect_failed', function () {
                 alert("Сосединение разорвано навсегда");
             });
     function sendMessage() {
         var text = input.val();
         socket.emit('message', text, function (data) {
-            printMessage(text);
+            printMessage("я> "+text);
         });
         input.val('');
         return false;
@@ -55,23 +64,23 @@
     }
 
     function printMessage(message) {
-        $('<li>').append($('<i>').text(message)).appendTo(ul);
+        $('<li>').text(message).appendTo(ul);
     }
-/*
-    form.submit(function () {
-        var input = $(this).find(':input');
-        var text = input.val();
-        input.val('');
+    /*
+     form.submit(function () {
+     var input = $(this).find(':input');
+     var text = input.val();
+     input.val('');
 
-        socket.emit('message', text, function (data) {
-            $('<li>', {text: text}).appendTo(ul);
+     socket.emit('message', text, function (data) {
+     $('<li>', {text: text}).appendTo(ul);
 
-        });
+     });
 
-        return false;
-    });
+     return false;
+     });
 
-    socket.on('message', function (text) {
-        $('<li>', {text: text}).appendTo(ul);
-    });*/
+     socket.on('message', function (text) {
+     $('<li>', {text: text}).appendTo(ul);
+     });*/
 </script>
